@@ -14,6 +14,11 @@ CONFIG   -= app_bundle
 
 TEMPLATE = app
 
+UI_DIR=tmp/ui
+MOC_DIR=tmp/moc
+OBJECTS_DIR=tmp/obj
+RCC_DIR=tmp/rcc
+
 
 SOURCES += Quellen/Start.cpp \
     Quellen/Haupt.cpp

@@ -19,11 +19,21 @@
 
 Haupt::Haupt(QObject *eltern, const QString &eingabedatei, const QString &ausgabedatei) : QObject(eltern),K_Eingabedatei(eingabedatei),K_Ausgabedatei(ausgabedatei)
 {
+	connect(this,SIGNAL(Fehler(QString)),this,SLOT(Fehlerbehandlung(QString)));
 	QTimer::singleShot(0,this,SLOT(Start()));
 }
 void Haupt::Start()
 {
-	qDebug()<<K_Eingabedatei;
-	qDebug()<<K_Ausgabedatei;
+	QFile GPX_Datei(K_Eingabedatei);
+	if (!GPX_Datei.open(QFile::ReadOnly))
+	{
+		Q_EMIT Fehler(tr("Fehler beim öffnen der Datei %1.\n%2").arg(K_Eingabedatei).arg(GPX_Datei.errorString()));
+		return;
+	}
+	Q_EMIT Beenden();
+}
+void Haupt::Fehlerbehandlung(const QString &fehler)
+{
+	qDebug()<<fehler;
 	Q_EMIT Beenden();
 }

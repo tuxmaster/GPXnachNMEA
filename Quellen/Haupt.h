@@ -30,10 +30,12 @@ class Haupt : public QObject
 
 	Q_SIGNALS:
 		void	Beenden();
+		void	Fehler(const QString &meldung);
 
 	public Q_SLOTS:
 	private Q_SLOTS:
 		void			Start();
+		void			Fehlerbehandlung(const QString &fehler);
 	private:
 		const QString	K_Eingabedatei;
 		const QString	K_Ausgabedatei;
