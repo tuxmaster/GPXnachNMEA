@@ -23,7 +23,28 @@ int main(int argc, char *argv[])
 {
 	QCoreApplication Anwendung(argc, argv);
 
-	Haupt *los=new Haupt(&Anwendung);
+	QTranslator UebersetzerQt;
+	UebersetzerQt.load(QString("qt_%1").arg(QLocale::system().name()),QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+
+	Anwendung.installTranslator(&UebersetzerQt);
+
+	Anwendung.setApplicationVersion(VERSION);
+	Anwendung.setApplicationName(Anwendung.arguments()[0]);
+
+	QCommandLineParser Komandozeile;
+
+	Komandozeile.addVersionOption();
+	Komandozeile.addHelpOption();
+	Komandozeile.setApplicationDescription(QCoreApplication::tr("Konvertiert eine GPX Datei in eine NMEA 0183 Datei."));
+	Komandozeile.addPositionalArgument(EINGABE,QCoreApplication::tr("Die .gpx Datei."));
+	Komandozeile.addPositionalArgument(AUSGABE,QCoreApplication::tr("Die .nmea Datei."));
+
+	Komandozeile.process(Anwendung);
+
+	if (Komandozeile.positionalArguments().size()!=2)
+		Komandozeile.showHelp(1);
+
+	Haupt *los=new Haupt(&Anwendung,Komandozeile.positionalArguments()[0],Komandozeile.positionalArguments()[1]);
 	QObject::connect(los,SIGNAL(Beenden()),&Anwendung,SLOT(quit()));
 
 	return Anwendung.exec();

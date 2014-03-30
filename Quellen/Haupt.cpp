@@ -17,11 +17,13 @@
 
 #include "Haupt.h"
 
-Haupt::Haupt(QObject *eltern) :	QObject(eltern)
+Haupt::Haupt(QObject *eltern, const QString &eingabedatei, const QString &ausgabedatei) : QObject(eltern),K_Eingabedatei(eingabedatei),K_Ausgabedatei(ausgabedatei)
 {
 	QTimer::singleShot(0,this,SLOT(Start()));
 }
 void Haupt::Start()
 {
+	qDebug()<<K_Eingabedatei;
+	qDebug()<<K_Ausgabedatei;
 	Q_EMIT Beenden();
 }

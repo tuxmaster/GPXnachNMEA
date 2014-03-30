@@ -19,4 +19,5 @@ SOURCES += Quellen/Start.cpp \
     Quellen/Haupt.cpp
 
 HEADERS += \
-    Quellen/Haupt.h
+    Quellen/Haupt.h \
+    Quellen/Vorgaben.h

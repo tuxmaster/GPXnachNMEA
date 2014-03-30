@@ -15,28 +15,11 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 
-#ifndef HAUPT_H
-#define HAUPT_H
+#ifndef VORGABEN_H
+#define VORGABEN_H
 
-#include <QtCore>
+#define VERSION "0.0.1"
+#define EINGABE "Eingabe"
+#define AUSGABE "Ausgabe"
 
-#include "Vorgaben.h"
-
-class Haupt : public QObject
-{
-		Q_OBJECT
-	public:
-		explicit Haupt(QObject *eltern,const QString &eingabedatei, const QString &ausgabedatei);
-
-	Q_SIGNALS:
-		void	Beenden();
-
-	public Q_SLOTS:
-	private Q_SLOTS:
-		void			Start();
-	private:
-		const QString	K_Eingabedatei;
-		const QString	K_Ausgabedatei;
-};
-
-#endif // HAUPT_H
+#endif // VORGABEN_H
