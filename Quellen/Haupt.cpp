@@ -86,6 +86,35 @@ void Haupt::Ausgeben()
 		Q_EMIT Fehler(tr("Fehler beim Schreiben der Datei %1.\n%2").arg(K_Ausgabedatei).arg(NMEA_Datei.errorString()));
 		return;
 	}
+	QTextStream Schreiben(&NMEA_Datei);
+	QString Breite,Laenge;
+	QChar BreiteOrientierung,LaengeOrientierung;
+	QStringList tmp;
+	Q_FOREACH(QGeoPositionInfo Positionsinfo,*K_Positionen)
+	{
+		tmp=Positionsinfo.coordinate().toString(QGeoCoordinate::DegreesMinutesSeconds).split(',').at(0).split(" ");
+		Breite=QString("%1%2.%3").arg(tmp[0].remove("°")).arg(tmp[1].remove("'")).arg(QString::number(tmp[2].remove("\"").toDouble()/60*1000,'f',0));
+		if(tmp[0].remove("°").toInt()<0)
+			BreiteOrientierung='S';
+		else
+			BreiteOrientierung='N';
+		tmp=Positionsinfo.coordinate().toString(QGeoCoordinate::DegreesMinutesSeconds).split(',').at(1).split(" ");
+		Laenge=QString("%1%2.%3").arg(tmp[1].remove("°")).arg(tmp[2].remove("'")).arg(QString::number(tmp[3].remove("\"").toDouble()/60*1000,'f',0));
+		if(tmp[0].remove("°").toInt()<0)
+			LaengeOrientierung='W';
+		else
+			LaengeOrientierung='E';
+		Schreiben<<QString("$GPRMC,%1,A,%2,%3,%4,%5,%6,%7,%8,0.0,E,S\n").arg(Positionsinfo.timestamp().toString("HHmmss.z"))
+													.arg(Breite).arg(BreiteOrientierung).arg(Laenge).arg(LaengeOrientierung)
+													.arg(Positionsinfo.attribute(QGeoPositionInfo::GroundSpeed)/0.514444)
+													.arg(Positionsinfo.attribute(QGeoPositionInfo::MagneticVariation))
+													.arg(Positionsinfo.timestamp().toString("ddMMyy"));
+		Schreiben<<QString("$GPGGA,%1,%2,%3,%4,%5,1,10,0.0,%6,M,0.0,M,,\n").arg(Positionsinfo.timestamp().toString("HHmmss.z"))
+													.arg(Breite).arg(BreiteOrientierung).arg(Laenge).arg(LaengeOrientierung)
+													.arg(Positionsinfo.coordinate().altitude());
+	}
+	Schreiben.flush();
+	NMEA_Datei.close();
 }
 
 void Haupt::Start()
