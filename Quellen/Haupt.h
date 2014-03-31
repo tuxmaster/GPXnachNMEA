@@ -19,6 +19,7 @@
 #define HAUPT_H
 
 #include <QtCore>
+#include <QGeoPositionInfo>
 
 #include "Vorgaben.h"
 
@@ -27,6 +28,7 @@ class Haupt : public QObject
 		Q_OBJECT
 	public:
 		explicit Haupt(QObject *eltern,const QString &eingabedatei, const QString &ausgabedatei);
+		~Haupt();
 
 	Q_SIGNALS:
 		void	Beenden();
@@ -36,9 +38,12 @@ class Haupt : public QObject
 	private Q_SLOTS:
 		void			Start();
 		void			Fehlerbehandlung(const QString &fehler);
+
 	private:
-		const QString	K_Eingabedatei;
-		const QString	K_Ausgabedatei;
+		const QString			K_Eingabedatei;
+		const QString			K_Ausgabedatei;
+		QList<QGeoPositionInfo>	*K_Positionen;
+
 };
 
 #endif // HAUPT_H
