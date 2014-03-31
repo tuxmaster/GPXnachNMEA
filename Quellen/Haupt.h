@@ -43,6 +43,8 @@ class Haupt : public QObject
 		const QString			K_Eingabedatei;
 		const QString			K_Ausgabedatei;
 		QList<QGeoPositionInfo>	*K_Positionen;
+		bool					Einlesen();
+		void					Ausgeben();
 
 };
 

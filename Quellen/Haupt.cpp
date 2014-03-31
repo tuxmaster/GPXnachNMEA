@@ -27,14 +27,13 @@ Haupt::~Haupt()
 {
 	delete K_Positionen;
 }
-
-void Haupt::Start()
+bool Haupt::Einlesen()
 {
 	QFile GPX_Datei(K_Eingabedatei);
-	if (!GPX_Datei.open(QFile::ReadOnly))
+	if (!GPX_Datei.open(QIODevice::ReadOnly))
 	{
-		Q_EMIT Fehler(tr("Fehler beim öffnen der Datei %1.\n%2").arg(K_Eingabedatei).arg(GPX_Datei.errorString()));
-		return;
+		Q_EMIT Fehler(tr("Fehler beim Öffnen der Datei %1.\n%2").arg(K_Eingabedatei).arg(GPX_Datei.errorString()));
+		return false;
 	}
 	QXmlStreamReader XML(&GPX_Datei);
 	QDateTime Zeitstempel;
@@ -77,6 +76,22 @@ void Haupt::Start()
 		XML.readNext();
 	}
 	GPX_Datei.close();
+	return true;
+}
+void Haupt::Ausgeben()
+{
+	QFile NMEA_Datei(K_Ausgabedatei);
+	if (!NMEA_Datei.open(QIODevice::WriteOnly))
+	{
+		Q_EMIT Fehler(tr("Fehler beim Schreiben der Datei %1.\n%2").arg(K_Ausgabedatei).arg(NMEA_Datei.errorString()));
+		return;
+	}
+}
+
+void Haupt::Start()
+{
+	if(Einlesen())
+		Ausgeben();
 	Q_EMIT Beenden();
 }
 void Haupt::Fehlerbehandlung(const QString &fehler)
